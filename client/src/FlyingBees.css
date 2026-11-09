@@ -1,0 +1,163 @@
+.bee-flight-layer {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.flying-bee {
+    position: absolute;
+    left: -70px;
+    width: 48px;
+    height: 30px;
+    display: block;
+    animation: beeFly 19s linear infinite;
+    will-change: transform;
+}
+
+.bee-body {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    width: 29px;
+    height: 18px;
+    border-radius: 50%;
+    background: repeating-linear-gradient(90deg,
+            #facc15 0px,
+            #facc15 7px,
+            #174ea6 7px,
+            #174ea6 13px);
+    border: 1px solid #12366b;
+    z-index: 2;
+}
+
+.bee-head {
+    position: absolute;
+    left: 34px;
+    top: 8px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #12366b;
+    z-index: 3;
+}
+
+.bee-head::before,
+.bee-head::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: white;
+}
+
+.bee-head::before {
+    left: 4px;
+}
+
+.bee-head::after {
+    left: 9px;
+}
+
+.bee-stinger {
+    position: absolute;
+    left: 5px;
+    top: 14px;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-right: 7px solid #174ea6;
+}
+
+.bee-wing {
+    position: absolute;
+    width: 13px;
+    height: 17px;
+    top: 0;
+    background: rgba(155, 218, 255, 0.85);
+    border: 1px solid rgba(23, 78, 166, 0.35);
+    border-radius: 80% 80% 40% 40%;
+    animation: wingFlap 180ms ease-in-out infinite alternate;
+    z-index: 1;
+}
+
+.wing-left {
+    left: 13px;
+    transform-origin: bottom;
+}
+
+.wing-right {
+    left: 25px;
+    transform-origin: bottom;
+}
+
+.bee-1 {
+    top: 15%;
+    animation-duration: 18s;
+}
+
+.bee-2 {
+    top: 34%;
+    animation-duration: 23s;
+    animation-delay: -8s;
+}
+
+.bee-3 {
+    top: 53%;
+    animation-duration: 20s;
+    animation-delay: -13s;
+}
+
+.bee-4 {
+    top: 72%;
+    animation-duration: 25s;
+    animation-delay: -5s;
+}
+
+.bee-5 {
+    top: 88%;
+    animation-duration: 22s;
+    animation-delay: -16s;
+}
+
+@keyframes beeFly {
+    0% {
+        transform: translate(0, 0) rotate(-8deg);
+    }
+
+    20% {
+        transform: translate(22vw, -35px) rotate(12deg);
+    }
+
+    45% {
+        transform: translate(48vw, 25px) rotate(-8deg);
+    }
+
+    70% {
+        transform: translate(76vw, -35px) rotate(10deg);
+    }
+
+    100% {
+        transform: translate(115vw, 15px) rotate(-8deg);
+    }
+}
+
+@keyframes wingFlap {
+    from {
+        transform: rotate(-25deg) scaleY(0.8);
+    }
+
+    to {
+        transform: rotate(25deg) scaleY(1.1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bee-flight-layer {
+        display: none;
+    }
+}
