@@ -1,4 +1,7 @@
-const BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+const BASE = (
+  import.meta.env.VITE_BACKEND_URL ||
+  "https://bluebee-mern-2.onrender.com"
+).replace(/\/+$/, "");
 
 // Uploaded files come back as "/uploads/..."; point them at the API host when it is on another domain.
 export const asset = (u) => (u && u.startsWith("/uploads/") ? BASE + u : u);
