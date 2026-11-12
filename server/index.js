@@ -35,13 +35,54 @@ const IMAGE_TYPES = { "image/jpeg": ".jpg", "image/png": ".png", "image/webp": "
 const VIDEO_TYPES = { "video/mp4": ".mp4", "video/webm": ".webm" };
 const ALL_TYPES = { ...IMAGE_TYPES, ...VIDEO_TYPES };
 
-const app = express();
-if (env.TRUST_PROXY === "1") app.set("trust proxy", 1);
-app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-app.use(cors({ origin: (env.CLIENT_URL || "").split(",").map((s) => s.trim()).filter(Boolean) }));
-app.use(express.json({ limit: "100kb" }));
-app.use("/uploads", express.static(UPLOAD_DIR, { maxAge: "30d", immutable: true, index: false }));
 
+const app = express();
+
+if (env.TRUST_PROXY === "1") app.set("trust proxy", 1);
+
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://bluebee-mern-k1vv.vercel.app",
+  ...(env.CLIENT_URL || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    try {
+      const hostname = new URL(origin).hostname;
+
+      // Allow preview deployments belonging to this Vercel project.
+      if (
+        /^bluebee-mern-k1vv-[a-z0-9-]+-shibinmamachans-projects\.vercel\.app$/.test(hostname)
+      ) {
+        return callback(null, true);
+      }
+    } catch {}
+
+    return callback(new Error("Origin not allowed by CORS"));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.use(express.json({ limit: "100kb" }));
+app.use("/uploads", express.static(UPLOAD_DIR, {
+  maxAge: "30d",
+  immutable: true,
+  index: false
+}));
 /* ================= Models ================= */
 const Booking = mongoose.model("Booking", new mongoose.Schema({
   name: { type: String, required: true, trim: true, maxlength: 120 },
